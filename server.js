@@ -2,6 +2,24 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+// ✅ Verify Token cho cxgenie.ai
+const VERIFY_TOKEN = "6562e459-389d-4483-a317-6fcd6fb6e302";
+
+// 📌 Xác minh Webhook API
+app.get('/webhook', (req, res) => {
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+
+    if (token === VERIFY_TOKEN) {
+        console.log("✅ Xác minh Webhook thành công!");
+        res.send(challenge);
+    } else {
+        console.log("❌ Xác minh thất bại!");
+        res.sendStatus(403);
+    }
+});
+
+// 📌 API xem tử vi
 app.post('/xem-tuvi', (req, res) => {
     const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
 
@@ -9,13 +27,14 @@ app.post('/xem-tuvi', (req, res) => {
         return res.status(400).json({ message: "Thiếu thông tin ngày giờ sinh hoặc năm xem." });
     }
 
+    // 🎯 Xử lý luận giải tử vi
     const thienCan = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
     const diaChi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
     
     let can = thienCan[namSinh % 10];
     let chi = diaChi[namSinh % 12];
 
-    let ketQua = {
+    const ketQua = {
         message: "Luận giải vận hạn",
         tongQuan: {
             namSinh: `${can} ${chi}`,
@@ -49,89 +68,6 @@ app.post('/xem-tuvi', (req, res) => {
             thang12: "Cuối năm thuận lợi, có thể đạt thành tựu quan trọng."
         },
         loiKhuyen: "Hãy tập trung vào công việc, tránh vội vàng trong các quyết định lớn."
-    };
-
-    res.json(ketQua);
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server chạy trên cổng ${PORT}`));
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-const VERIFY_TOKEN = "my_secret_token"; // Token bạn tự đặt
-
-// Xác minh Webhook
-app.get('/webhook', (req, res) => {
-    const token = req.query["hub.verify_token"];
-    const challenge = req.query["hub.challenge"];
-
-    if (token === VERIFY_TOKEN) {
-        console.log("✅ Xác minh Webhook thành công!");
-        res.send(challenge);
-    } else {
-        console.log("❌ Xác minh thất bại!");
-        res.sendStatus(403);
-    }
-});
-
-// Xử lý yêu cầu xem tử vi
-app.post('/xem-tuvi', (req, res) => {
-    const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
-
-    if (!ngaySinh || !thangSinh || !namSinh || !gioSinh || !namXem) {
-        return res.status(400).json({ message: "Thiếu thông tin ngày giờ sinh hoặc năm xem." });
-    }
-
-    // Xử lý tử vi (Giống code trước)
-    const ketQua = {
-        message: "Luận giải vận hạn",
-        namSinh: `${namSinh}`,
-        duBao: "Năm 2025 có nhiều cơ hội nhưng cần đề phòng sức khỏe.",
-        loiKhuyen: "Hãy tập trung vào mục tiêu, tránh quyết định vội vàng."
-    };
-
-    res.json(ketQua);
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server chạy trên cổng ${PORT}`));
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-// ✅ Đặt Verify Token của bạn
-const VERIFY_TOKEN = "6562e459-389d-4483-a317-6fcd6fb6e302";
-
-// 📌 Route xác minh webhook cho cxgenie.ai
-app.get('/webhook', (req, res) => {
-    const token = req.query["hub.verify_token"];
-    const challenge = req.query["hub.challenge"];
-
-    if (token === VERIFY_TOKEN) {
-        console.log("✅ Xác minh Webhook thành công!");
-        res.send(challenge);
-    } else {
-        console.log("❌ Xác minh thất bại!");
-        res.sendStatus(403);
-    }
-});
-
-// 📌 API xử lý xem tử vi
-app.post('/xem-tuvi', (req, res) => {
-    const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
-
-    if (!ngaySinh || !thangSinh || !namSinh || !gioSinh || !namXem) {
-        return res.status(400).json({ message: "Thiếu thông tin ngày giờ sinh hoặc năm xem." });
-    }
-
-    // 🎯 Xử lý tử vi cơ bản
-    const ketQua = {
-        message: "Luận giải vận hạn",
-        namSinh: `${namSinh}`,
-        duBao: "Năm 2025 có nhiều cơ hội nhưng cần đề phòng sức khỏe.",
-        loiKhuyen: "Hãy tập trung vào mục tiêu, tránh quyết định vội vàng."
     };
 
     res.json(ketQua);
