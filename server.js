@@ -19,12 +19,12 @@ app.get('/webhook', (req, res) => {
     }
 });
 
-// 📌 API xem tử vi
+// 📌 API xem tử vi (trả kết quả dưới dạng văn bản)
 app.post('/xem-tuvi', (req, res) => {
     const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
 
     if (!ngaySinh || !thangSinh || !namSinh || !gioSinh || !namXem) {
-        return res.status(400).json({ message: "Thiếu thông tin ngày giờ sinh hoặc năm xem." });
+        return res.status(400).send("Thiếu thông tin ngày giờ sinh hoặc năm xem.");
     }
 
     // 🎯 Xử lý luận giải tử vi
@@ -34,44 +34,46 @@ app.post('/xem-tuvi', (req, res) => {
     let can = thienCan[namSinh % 10];  // Tính Thiên Can
     let chi = diaChi[namSinh % 12];    // Tính Địa Chi
 
-    // Kết quả phân tích tử vi
-    const ketQua = {
-        message: "Luận giải vận hạn",
-        tongQuan: {
-            namSinh: `${can} ${chi}`,
-            nguHanh: "Kiếm Phong Kim",
-            tinhCach: "Kiên định, mạnh mẽ nhưng đôi khi quá cứng nhắc."
-        },
-        saoChieuMenh: {
-            sao: "Thái Âm",
-            danhGia: "Tốt cho công danh, nhưng cần đề phòng về sức khỏe."
-        },
-        hanNam: {
-            han: "Diêm Vương",
-            moTa: "Cẩn thận về sức khỏe, tài chính có thể bị hao hụt bất ngờ."
-        },
-        vanNien: {
-            ten: "Xà Hãm Tỉnh",
-            moTa: "Dễ gặp khó khăn, nhưng nếu kiên trì sẽ vượt qua."
-        },
-        duBao: {
-            thang1: "Khởi đầu thuận lợi, có quý nhân phù trợ.",
-            thang2: "Tài chính gặp may mắn, nhưng cần tiết kiệm.",
-            thang3: "Cẩn trọng kẻ tiểu nhân, tránh thị phi.",
-            thang4: "Công việc tiến triển, cơ hội mở rộng.",
-            thang5: "Dễ gặp thử thách, không nên đầu tư mạo hiểm.",
-            thang6: "Tinh thần căng thẳng, cần giữ bình tĩnh.",
-            thang7: "Cơ hội mới trong sự nghiệp, nhưng cần sáng suốt.",
-            thang8: "Gia đình hòa thuận, nên quan tâm người thân.",
-            thang9: "Sự nghiệp ổn định, tránh thay đổi lớn.",
-            thang10: "Dễ gặp tiểu nhân, không nên cho vay mượn.",
-            thang11: "Tài chính khởi sắc, nhưng không nên chủ quan.",
-            thang12: "Cuối năm thuận lợi, có thể đạt thành tựu quan trọng."
-        },
-        loiKhuyen: "Hãy tập trung vào công việc, tránh vội vàng trong các quyết định lớn."
-    };
+    // 🎯 Kết quả phân tích tử vi dưới dạng văn bản
+    const ketQua = `
+    **Luận Giải Tử Vi:**
+    
+    - **Thiên Can - Địa Chi của bạn**: ${can} ${chi}
+    - **Ngũ Hành**: Kiếm Phong Kim
+    - **Tính cách**: Kiên định, mạnh mẽ nhưng đôi khi quá cứng nhắc.
+    
+    **Sao chiếu mệnh**:
+    - **Sao**: Thái Âm
+    - **Đánh giá**: Tốt cho công danh, nhưng cần đề phòng về sức khỏe.
+    
+    **Hạn năm**:
+    - **Hạn**: Diêm Vương
+    - **Mô tả**: Cẩn thận về sức khỏe, tài chính có thể bị hao hụt bất ngờ.
 
-    res.json(ketQua);
+    **Vận Niên**:
+    - **Tên**: Xà Hãm Tỉnh
+    - **Mô tả**: Dễ gặp khó khăn, nhưng nếu kiên trì sẽ vượt qua.
+
+    **Dự Báo** (theo tháng):
+    - **Tháng 1**: Khởi đầu thuận lợi, có quý nhân phù trợ.
+    - **Tháng 2**: Tài chính gặp may mắn, nhưng cần tiết kiệm.
+    - **Tháng 3**: Cẩn trọng kẻ tiểu nhân, tránh thị phi.
+    - **Tháng 4**: Công việc tiến triển, cơ hội mở rộng.
+    - **Tháng 5**: Dễ gặp thử thách, không nên đầu tư mạo hiểm.
+    - **Tháng 6**: Tinh thần căng thẳng, cần giữ bình tĩnh.
+    - **Tháng 7**: Cơ hội mới trong sự nghiệp, nhưng cần sáng suốt.
+    - **Tháng 8**: Gia đình hòa thuận, nên quan tâm người thân.
+    - **Tháng 9**: Sự nghiệp ổn định, tránh thay đổi lớn.
+    - **Tháng 10**: Dễ gặp tiểu nhân, không nên cho vay mượn.
+    - **Tháng 11**: Tài chính khởi sắc, nhưng không nên chủ quan.
+    - **Tháng 12**: Cuối năm thuận lợi, có thể đạt thành tựu quan trọng.
+
+    **Lời khuyên**:
+    Hãy tập trung vào công việc, tránh vội vàng trong các quyết định lớn.
+    `;
+
+    // Trả kết quả luận giải tử vi dưới dạng văn bản
+    res.send(ketQua);
 });
 
 // ✅ Khởi động server
