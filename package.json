@@ -1,0 +1,12 @@
+{
+  "name": "tuvi-bot",
+  "version": "1.0.0",
+  "description": "Bot Xem Tử Vi API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
