@@ -5,7 +5,7 @@ app.use(express.json());
 // ✅ Verify Token cho cxgenie.ai
 const VERIFY_TOKEN = "6562e459-389d-4483-a317-6fcd6fb6e302";
 
-// 📌 Xác minh Webhook API
+// 📌 Xác minh Webhook API (GET)
 app.get('/webhook', (req, res) => {
     const token = req.query["hub.verify_token"];
     const challenge = req.query["hub.challenge"];
@@ -19,7 +19,7 @@ app.get('/webhook', (req, res) => {
     }
 });
 
-// 📌 API xem tử vi
+// 📌 API xem tử vi (POST)
 app.post('/xem-tuvi', (req, res) => {
     const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
 
@@ -31,13 +31,13 @@ app.post('/xem-tuvi', (req, res) => {
     const thienCan = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
     const diaChi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
     
-    let can = thienCan[namSinh % 10];
-    let chi = diaChi[namSinh % 12];
+    let can = thienCan[namSinh % 10];  // Tính Thiên Can
+    let chi = diaChi[namSinh % 12];    // Tính Địa Chi
 
     const ketQua = {
         message: "Luận giải vận hạn",
         tongQuan: {
-            namSinh: `${can} ${chi}`,
+            namSinh: `${can} ${chi}`,  // Thiên Can + Địa Chi của năm sinh
             nguHanh: "Kiếm Phong Kim",
             tinhCach: "Kiên định, mạnh mẽ nhưng đôi khi quá cứng nhắc."
         },
