@@ -5,26 +5,24 @@ app.use(express.json());
 // ✅ Verify Token cho cxgenie.ai
 const VERIFY_TOKEN = "6562e459-389d-4483-a317-6fcd6fb6e302";
 
-// 📌 Xác minh Webhook API
+// 📌 Xác minh Webhook API (GET)
 app.get('/webhook', (req, res) => {
     const token = req.query["hub.verify_token"];
     const challenge = req.query["hub.challenge"];
 
-    // Xác minh token nhận từ cxgenie.ai
     if (token === VERIFY_TOKEN) {
         console.log("✅ Xác minh Webhook thành công!");
-        res.send(challenge);  // Trả về challenge để xác nhận webhook
+        res.send(challenge);
     } else {
         console.log("❌ Xác minh thất bại!");
-        res.sendStatus(403);  // Trả về mã lỗi 403 nếu token không hợp lệ
+        res.sendStatus(403);
     }
 });
 
-// 📌 API xem tử vi
+// 📌 API xem tử vi (POST)
 app.post('/xem-tuvi', (req, res) => {
     const { ngaySinh, thangSinh, namSinh, gioSinh, namXem } = req.body;
 
-    // Kiểm tra nếu thiếu dữ liệu
     if (!ngaySinh || !thangSinh || !namSinh || !gioSinh || !namXem) {
         return res.status(400).json({ message: "Thiếu thông tin ngày giờ sinh hoặc năm xem." });
     }
@@ -72,7 +70,6 @@ app.post('/xem-tuvi', (req, res) => {
         loiKhuyen: "Hãy tập trung vào công việc, tránh vội vàng trong các quyết định lớn."
     };
 
-    // Trả về kết quả luận giải tử vi
     res.json(ketQua);
 });
 
